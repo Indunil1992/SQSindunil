@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/test-queue.fifo`,\n        AttributeNames: ['SenderId'],\n        MaxNumberOfMessages: '20',\n        VisibilityTimeout: '50',\n        WaitTimeSeconds: '30',\n        MessageAttributeNames: ['f']\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                    console.log(\"Success\");\n                    console.log(data);\n                });\n            } else {\n                // No messages to process\n                console.log(\"No messages\");\n                console.log(data);\n            }\n        })\n        .catch(err => {\n            // error handling goes here\n            console.log(\"error\");\n            console.log(data);\n        });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed GET\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveAndDeleteMessages({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,\n        AttributeNames: ['All'],\n        MaxNumberOfMessages: '1',\n        VisibilityTimeout: '30',\n        WaitTimeSeconds: '0'\n    }, function (receivedMessages) {\n\n console.log(\"receivedMessages\");\n                 console.log( receivedMessages );\n        // implement received message filtering logic here and return filtered set of messages which \n        // are allowed to delete in the next step\n        return receivedMessages;\n    }, function (deleteSuccessData) {\n\n console.log(\"deleteSuccessData\");\n                 console.log( deleteSuccessData );\n        // implement delete success state here\n    }, function (error) {\n\n console.log(\"error\");\n                 console.log( error );\n        // implement error handling logic here\n    });\n\n\n    callback(null, { \"message\": \"Successfully executed GET\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -53,24 +53,24 @@
     ],
     "currentFileId": "0eff4403-1014-4690-a140-cbee8bee62d4",
     "resources": {
-      "apigusEast1As2TestApiteststgingindhead": {
-        "name": "apigusEast1As2TestApiteststgingindhead",
+      "apigusEast1slackapiteststgingindget": {
+        "name": "apigusEast1slackapiteststgingindget",
         "type": "API_GATEWAY",
         "config": {
           "selectedRegion": "us-east-1",
           "apiMode": 1,
-          "apiName": "As2-test-api",
-          "apiId": "l5dow74guk",
-          "endpointType": "REGIONAL",
-          "rootResourceId": "ra5rnc57lf",
+          "apiName": "slack_api",
+          "apiId": "gzxv3u0uhe",
+          "endpointType": "EDGE",
+          "rootResourceId": "cxna1m1fmi",
           "existingResources": {
-            "/As2TestLambda": "7t7w58",
-            "/": "ra5rnc57lf"
+            "/": "cxna1m1fmi",
+            "/chats": "qlk5ig"
           },
           "resourceMode": 0,
           "resourceName": "test/stging/ind",
           "resourcePath": "/test/stging/ind",
-          "restMethod": "HEAD",
+          "restMethod": "GET",
           "proxyIntegration": false,
           "enableCORS": false,
           "stageMode": 0,
@@ -97,212 +97,6 @@
           "maximumMessageSize": 256,
           "receiveMessageWaitTime": "0",
           "queueARN": "arn:aws:sqs:us-east-1:318300609668:Hiru1T"
-        }
-      },
-      "apigusEast1As2TestApiteststgingindget": {
-        "name": "apigusEast1As2TestApiteststgingindget",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 1,
-          "apiName": "As2-test-api",
-          "apiId": "l5dow74guk",
-          "endpointType": "REGIONAL",
-          "rootResourceId": "ra5rnc57lf",
-          "existingResources": {
-            "/As2TestLambda": "7t7w58",
-            "/test/stging/ind": "cdjdz5",
-            "/test/stging": "l0rjou",
-            "/": "ra5rnc57lf",
-            "/test": "uy970l"
-          },
-          "resourceMode": 0,
-          "resourceName": "test/stging/ind",
-          "resourcePath": "/test/stging/ind",
-          "restMethod": "GET",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "Test",
-          "mode": 1
-        }
-      },
-      "apigusEast1TestAPIteststgingindget": {
-        "name": "apigusEast1TestAPIteststgingindget",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 1,
-          "apiName": "TestAPI",
-          "apiId": "0itznun7w3",
-          "endpointType": "EDGE",
-          "rootResourceId": "h2lelj6j7k",
-          "existingResources": {
-            "/hiru/test": "2b8zt0",
-            "/testPathWithSlash": "2rkw74",
-            "/hiru": "3nc52b",
-            "/hiru/sample": "4226gg",
-            "/hiru/sqstest": "88gr2y",
-            "/MyLambda": "98nqbj",
-            "/test/stging": "awx9ar",
-            "/test/stging/ind": "gie7wm",
-            "/": "h2lelj6j7k",
-            "/testWithSlash": "q4m4g1",
-            "/testtwospeciallambda": "q4szm3",
-            "/test": "squ970",
-            "/testtwospecialkumutest": "wey3lk",
-            "/hiru/snscheck": "wok1ku"
-          },
-          "resourceMode": 0,
-          "resourceName": "test/stging/ind",
-          "resourcePath": "/test/stging/ind",
-          "restMethod": "GET",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "Test",
-          "mode": 1
-        }
-      },
-      "apigusEast1TestAPIteststgingindpost": {
-        "name": "apigusEast1TestAPIteststgingindpost",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 1,
-          "apiName": "TestAPI",
-          "apiId": "0itznun7w3",
-          "endpointType": "EDGE",
-          "rootResourceId": "h2lelj6j7k",
-          "existingResources": {
-            "/hiru/test": "2b8zt0",
-            "/testPathWithSlash": "2rkw74",
-            "/hiru": "3nc52b",
-            "/hiru/sample": "4226gg",
-            "/hiru/sqstest": "88gr2y",
-            "/MyLambda": "98nqbj",
-            "/test/stging": "awx9ar",
-            "/test/stging/ind": "gie7wm",
-            "/": "h2lelj6j7k",
-            "/testWithSlash": "q4m4g1",
-            "/testtwospeciallambda": "q4szm3",
-            "/test": "squ970",
-            "/testtwospecialkumutest": "wey3lk",
-            "/hiru/snscheck": "wok1ku"
-          },
-          "resourceMode": 0,
-          "resourceName": "test/stging/ind",
-          "resourcePath": "/test/stging/ind",
-          "restMethod": "POST",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "Test",
-          "mode": 1
-        }
-      },
-      "apigusEast1TestAPIteststgingindput": {
-        "name": "apigusEast1TestAPIteststgingindput",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 1,
-          "apiName": "TestAPI",
-          "apiId": "0itznun7w3",
-          "endpointType": "EDGE",
-          "rootResourceId": "h2lelj6j7k",
-          "existingResources": {
-            "/hiru/test": "2b8zt0",
-            "/testPathWithSlash": "2rkw74",
-            "/hiru": "3nc52b",
-            "/hiru/sample": "4226gg",
-            "/hiru/sqstest": "88gr2y",
-            "/MyLambda": "98nqbj",
-            "/test/stging": "awx9ar",
-            "/test/stging/ind": "gie7wm",
-            "/": "h2lelj6j7k",
-            "/testWithSlash": "q4m4g1",
-            "/testtwospeciallambda": "q4szm3",
-            "/test": "squ970",
-            "/testtwospecialkumutest": "wey3lk",
-            "/hiru/snscheck": "wok1ku"
-          },
-          "resourceMode": 0,
-          "resourceName": "test/stging/ind",
-          "resourcePath": "/test/stging/ind",
-          "restMethod": "PUT",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "Test",
-          "mode": 1
-        }
-      },
-      "apigusEast1slackapiteststgingindget": {
-        "name": "apigusEast1slackapiteststgingindget",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 1,
-          "apiName": "slack_api",
-          "apiId": "gzxv3u0uhe",
-          "endpointType": "EDGE",
-          "rootResourceId": "cxna1m1fmi",
-          "existingResources": {
-            "/": "cxna1m1fmi",
-            "/chats": "qlk5ig"
-          },
-          "resourceMode": 0,
-          "resourceName": "test/stging/ind",
-          "resourcePath": "/test/stging/ind",
-          "restMethod": "GET",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "Test",
-          "mode": 1
-        }
-      },
-      "sqsudithTestQueue": {
-        "name": "sqsudithTestQueue",
-        "type": "SQS",
-        "config": {
-          "mode": 1,
-          "existing": true,
-          "name": "udith-test-queue",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/udith-test-queue",
-          "selectedRegion": "us-east-1",
-          "deliveryDelay": "0",
-          "deliveryDelayUnit": "seconds",
-          "queueType": "standardQueue",
-          "defaultVisibilityTimeout": "30",
-          "defaultVisibilityTimeoutUnit": "seconds",
-          "messageRetentionPeriod": "345600",
-          "messageRetentionPeriodUnit": "seconds",
-          "maximumMessageSize": 256,
-          "receiveMessageWaitTime": "0",
-          "queueARN": "arn:aws:sqs:us-east-1:318300609668:udith-test-queue"
-        }
-      },
-      "sqstestQueuefifo": {
-        "name": "sqstestQueuefifo",
-        "type": "SQS",
-        "config": {
-          "mode": 1,
-          "existing": true,
-          "name": "test-queue.fifo",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/test-queue.fifo",
-          "selectedRegion": "us-east-1",
-          "deliveryDelay": "0",
-          "deliveryDelayUnit": "seconds",
-          "queueType": "fifoQueue",
-          "defaultVisibilityTimeout": "30",
-          "defaultVisibilityTimeoutUnit": "seconds",
-          "messageRetentionPeriod": "345600",
-          "messageRetentionPeriodUnit": "seconds",
-          "maximumMessageSize": 256,
-          "receiveMessageWaitTime": "0",
-          "queueARN": "arn:aws:sqs:us-east-1:318300609668:test-queue.fifo"
         }
       }
     },
@@ -346,7 +140,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562588261396
+    "lastSave": 1562589572567
   },
   "VCS_STATE": {
     "provider": "GitHub",
