@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/udith-test-queue`,\n        AttributeNames: ['SenderId'],\n        MaxNumberOfMessages: '20',\n        VisibilityTimeout: '50',\n        WaitTimeSeconds: '30'\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                    console.log(\"Success\");\n                    console.log(data);\n                });\n            } else {\n                // No messages to process\n                console.log(\"No messages\");\n                console.log(data);\n            }\n        })\n        .catch(err => {\n            // error handling goes here\n            console.log(\"error\");\n            console.log(data);\n        });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed GET\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/test-queue.fifo`,\n        AttributeNames: ['SenderId'],\n        MaxNumberOfMessages: '20',\n        VisibilityTimeout: '50',\n        WaitTimeSeconds: '30',\n        MessageAttributeNames: ['f']\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                    console.log(\"Success\");\n                    console.log(data);\n                });\n            } else {\n                // No messages to process\n                console.log(\"No messages\");\n                console.log(data);\n            }\n        })\n        .catch(err => {\n            // error handling goes here\n            console.log(\"error\");\n            console.log(data);\n        });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed GET\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -283,6 +283,27 @@
           "receiveMessageWaitTime": "0",
           "queueARN": "arn:aws:sqs:us-east-1:318300609668:udith-test-queue"
         }
+      },
+      "sqstestQueuefifo": {
+        "name": "sqstestQueuefifo",
+        "type": "SQS",
+        "config": {
+          "mode": 1,
+          "existing": true,
+          "name": "test-queue.fifo",
+          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/test-queue.fifo",
+          "selectedRegion": "us-east-1",
+          "deliveryDelay": "0",
+          "deliveryDelayUnit": "seconds",
+          "queueType": "fifoQueue",
+          "defaultVisibilityTimeout": "30",
+          "defaultVisibilityTimeoutUnit": "seconds",
+          "messageRetentionPeriod": "345600",
+          "messageRetentionPeriodUnit": "seconds",
+          "maximumMessageSize": 256,
+          "receiveMessageWaitTime": "0",
+          "queueARN": "arn:aws:sqs:us-east-1:318300609668:test-queue.fifo"
+        }
       }
     },
     "customTemplate": {
@@ -325,7 +346,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562587520140
+    "lastSave": 1562588261396
   },
   "VCS_STATE": {
     "provider": "GitHub",
