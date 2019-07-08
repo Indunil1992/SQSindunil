@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    \n    sqs.sendMessage({\n        MessageBody: 'sachii',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,\n        DelaySeconds: '0',\n        MessageAttributes: {}\n    }, function (data) {\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n\n    sqs.sendMessage({\n        MessageBody: 'sachii',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,\n        DelaySeconds: '0',\n        MessageAttributes: {}\n    }, function (data) {\n         console.log(\"successful message delivery\");\n                 console.log( data );\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\n        console.log(\"error\");\n            console.log( error );\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed(check existing T&R)\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -32,18 +32,26 @@
         },
         "triggers": [
           {
-            "resourceName": "apigusEast1TestAPIcheckcalput",
-            "config": {}
-          },
-          {
             "resourceName": "s3foobucketindunil",
             "config": {
               "type": "s3:ObjectCreated:Put",
               "keyPrefix": "",
               "keySuffix": ""
             }
+          },
+          {
+            "resourceName": "apigusEast1TestAPIcheckcalput",
+            "config": {}
           }
-        ]
+        ],
+        "testCases": {
+          "26c4f004-089c-4966-8a86-0e8c17d238da": {
+            "id": "26c4f004-089c-4966-8a86-0e8c17d238da",
+            "name": "Unnamed event",
+            "functionId": "0eff4403-1014-4690-a140-cbee8bee62d4",
+            "event": "{\n    \"key1\": \"value1\",\n    \"key2\": \"value2\",\n    \"key3\": \"value3\"\n}"
+          }
+        }
       }
     },
     "deletedFiles": [],
@@ -158,8 +166,9 @@
           "restMethod": "PUT",
           "proxyIntegration": false,
           "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "test1",
+          "stageMode": 1,
+          "stageName": "Test",
+          "stageDeploymentId": "ahgw1o",
           "mode": 1
         }
       },
@@ -215,7 +224,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562580652973
+    "lastSave": 1562582033643
   },
   "VCS_STATE": {
     "provider": "GitHub",
