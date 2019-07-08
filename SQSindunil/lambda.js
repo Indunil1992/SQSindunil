@@ -5,7 +5,7 @@ const sqs = new SL_AWS.SQS(AWS);
 exports.handler = function (event, context, callback) {
     sqs.sendMessage({
         MessageBody: 'sachii',
-        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/udith-test-queue`,
+        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,
         DelaySeconds: '0',
         MessageAttributes: {}
     }, function (data) {
