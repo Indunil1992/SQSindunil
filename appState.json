@@ -32,7 +32,7 @@
         },
         "triggers": [
           {
-            "resourceName": "apigusEast1TestAPIteststgingindput",
+            "resourceName": "apigusEast1TestAPIteststgingindget",
             "config": {}
           }
         ],
@@ -144,9 +144,12 @@
             "/hiru/sample": "4226gg",
             "/hiru/sqstest": "88gr2y",
             "/MyLambda": "98nqbj",
+            "/test/stging": "awx9ar",
+            "/test/stging/ind": "gie7wm",
             "/": "h2lelj6j7k",
             "/testWithSlash": "q4m4g1",
             "/testtwospeciallambda": "q4szm3",
+            "/test": "squ970",
             "/testtwospecialkumutest": "wey3lk",
             "/hiru/snscheck": "wok1ku"
           },
@@ -276,7 +279,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562586476724
+    "lastSave": 1562586543829
   },
   "VCS_STATE": {
     "provider": "GitHub",
