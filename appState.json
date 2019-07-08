@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/udith-test-queue`,\n        AttributeNames: ['All'],\n        MaxNumberOfMessages: '10',\n        VisibilityTimeout: '30',\n        WaitTimeSeconds: '20'\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                    console.log(\"Success\");\n                    console.log(data);\n                });\n            } else {\n                // No messages to process\n                console.log(\"No messages\");\n                console.log(data);\n            }\n        })\n        .catch(err => {\n            // error handling goes here\n            console.log(\"error\");\n            console.log(data);\n        });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed GET\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/udith-test-queue`,\n        AttributeNames: ['SenderId'],\n        MaxNumberOfMessages: '20',\n        VisibilityTimeout: '50',\n        WaitTimeSeconds: '30'\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                    console.log(\"Success\");\n                    console.log(data);\n                });\n            } else {\n                // No messages to process\n                console.log(\"No messages\");\n                console.log(data);\n            }\n        })\n        .catch(err => {\n            // error handling goes here\n            console.log(\"error\");\n            console.log(data);\n        });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed GET\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -325,7 +325,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562587203132
+    "lastSave": 1562587520140
   },
   "VCS_STATE": {
     "provider": "GitHub",
