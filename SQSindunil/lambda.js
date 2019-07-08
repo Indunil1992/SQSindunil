@@ -4,24 +4,36 @@ const sqs = new SL_AWS.SQS(AWS);
 
 exports.handler = function (event, context, callback) {
 
-
-    sqs.sendMessage({
-        MessageBody: 'sachii',
+    sqs.receiveMessage({
         QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,
-        DelaySeconds: '0',
-        MessageAttributes: {}
-    }, function (data) {
-         console.log("successful message delivery");
+        AttributeNames: ['All'],
+        MaxNumberOfMessages: '10',
+        VisibilityTimeout: '30',
+        WaitTimeSeconds: '0'
+    }).promise()
+        .then(receivedMsgData => {
+            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {
+                let receivedMessages = receivedMsgData.Messages;
+                receivedMessages.forEach(message => {
+                    // your logic to access each message through out the loop. Each message is available under variable message 
+                    // within this block
+                     console.log("Success");
                  console.log( data );
-        // your logic (logging etc) to handle successful message delivery, should be here
-    }, function (error) {
-        console.log("error");
-            console.log( error );
-        // your logic (logging etc) to handle failures, should be here
-    });
+                });
+            } else {
+                // No messages to process
+                console.log("No messages");
+                 console.log( data );
+            }
+        })
+        .catch(err => {
+            // error handling goes here
+              console.log("error");
+            console.log( data );
+        });
 
 
 
 
-    callback(null, { "message": "Successfully executed nw and existing" });
+    callback(null, { "message": "Successfully executed GET" });
 }

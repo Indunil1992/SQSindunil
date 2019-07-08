@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n\n    sqs.sendMessage({\n        MessageBody: 'sachii',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,\n        DelaySeconds: '0',\n        MessageAttributes: {}\n    }, function (data) {\n         console.log(\"successful message delivery\");\n                 console.log( data );\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\n        console.log(\"error\");\n            console.log( error );\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed nw and existing\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,\n        AttributeNames: ['All'],\n        MaxNumberOfMessages: '10',\n        VisibilityTimeout: '30',\n        WaitTimeSeconds: '0'\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                     console.log(\"Success\");\n                 console.log( data );\n                });\n            } else {\n                // No messages to process\n                console.log(\"No messages\");\n                 console.log( data );\n            }\n        })\n        .catch(err => {\n            // error handling goes here\n              console.log(\"error\");\n            console.log( data );\n        });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed GET\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -32,7 +32,7 @@
         },
         "triggers": [
           {
-            "resourceName": "apigusEast1induniAPIteststgingindget",
+            "resourceName": "apigusEast1As2TestApiteststgingindhead",
             "config": {}
           }
         ],
@@ -53,6 +53,31 @@
     ],
     "currentFileId": "0eff4403-1014-4690-a140-cbee8bee62d4",
     "resources": {
+      "apigusEast1As2TestApiteststgingindhead": {
+        "name": "apigusEast1As2TestApiteststgingindhead",
+        "type": "API_GATEWAY",
+        "config": {
+          "selectedRegion": "us-east-1",
+          "apiMode": 1,
+          "apiName": "As2-test-api",
+          "apiId": "l5dow74guk",
+          "endpointType": "REGIONAL",
+          "rootResourceId": "ra5rnc57lf",
+          "existingResources": {
+            "/As2TestLambda": "7t7w58",
+            "/": "ra5rnc57lf"
+          },
+          "resourceMode": 0,
+          "resourceName": "test/stging/ind",
+          "resourcePath": "/test/stging/ind",
+          "restMethod": "HEAD",
+          "proxyIntegration": false,
+          "enableCORS": false,
+          "stageMode": 0,
+          "stageName": "Test",
+          "mode": 1
+        }
+      },
       "sqsHiru1T": {
         "name": "sqsHiru1T",
         "type": "SQS",
@@ -72,71 +97,6 @@
           "maximumMessageSize": 256,
           "receiveMessageWaitTime": "0",
           "queueARN": "arn:aws:sqs:us-east-1:318300609668:Hiru1T"
-        }
-      },
-      "apigusEast1TestAPIcheckcalput": {
-        "name": "apigusEast1TestAPIcheckcalput",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 1,
-          "apiName": "TestAPI",
-          "apiId": "0itznun7w3",
-          "endpointType": "EDGE",
-          "rootResourceId": "h2lelj6j7k",
-          "existingResources": {
-            "/hiru/test": "2b8zt0",
-            "/testPathWithSlash": "2rkw74",
-            "/hiru": "3nc52b",
-            "/hiru/sample": "4226gg",
-            "/hiru/sqstest": "88gr2y",
-            "/MyLambda": "98nqbj",
-            "/": "h2lelj6j7k",
-            "/testWithSlash": "q4m4g1",
-            "/testtwospeciallambda": "q4szm3",
-            "/testtwospecialkumutest": "wey3lk",
-            "/hiru/snscheck": "wok1ku"
-          },
-          "resourceMode": 0,
-          "resourceName": "check/cal",
-          "resourcePath": "/check/cal",
-          "restMethod": "PUT",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 1,
-          "stageName": "Test",
-          "stageDeploymentId": "ahgw1o",
-          "mode": 1
-        }
-      },
-      "s3foobucketindunil": {
-        "name": "s3foobucketindunil",
-        "type": "S3",
-        "config": {
-          "mode": 1,
-          "bucket": {
-            "region": "us-east-1",
-            "name": "foobucketindunil"
-          }
-        }
-      },
-      "apigusEast1induniAPIteststgingindget": {
-        "name": "apigusEast1induniAPIteststgingindget",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 0,
-          "apiName": "induniAPI",
-          "endpointType": "EDGE",
-          "resourceMode": 0,
-          "resourceName": "test/stging/ind",
-          "resourcePath": "/test/stging/ind",
-          "restMethod": "GET",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "Test",
-          "mode": 0
         }
       }
     },
@@ -180,7 +140,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562582494245
+    "lastSave": 1562584875136
   },
   "VCS_STATE": {
     "provider": "GitHub",
