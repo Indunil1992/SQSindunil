@@ -23,5 +23,5 @@ exports.handler = function (event, context, callback) {
 
 
 
-    callback(null, { "message": "Successfully executed(check existing T&R)" });
+    callback(null, { "message": "Successfully executed nw and existing" });
 }
