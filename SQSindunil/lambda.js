@@ -10,8 +10,12 @@ exports.handler = function (event, context, callback) {
         DelaySeconds: '0',
         MessageAttributes: {}
     }, function (data) {
+         console.log("Success");
+                 console.log( data );
         // your logic (logging etc) to handle successful message delivery, should be here
     }, function (error) {
+        console.log("error");
+            console.log( data );
         // your logic (logging etc) to handle failures, should be here
     });
 
