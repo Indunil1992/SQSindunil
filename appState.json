@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\n\nexports.handler = function (event, context, callback) {\n\n\n    sqs.sendMessage({\n        MessageBody: 'test1',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/sam1`,\n        DelaySeconds: '0',\n        MessageAttributes: {}\n    }, function (data) {\n          console.log(\"Success\");\n                 console.log( data );\n\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\n        console.log(\"not success\");\n                 console.log( error );\n\n\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n    callback(null, { \"message\": \"Successfully executed GET\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\n\nexports.handler = function (event, context, callback) {\n\n\n    sqs.sendMessage({\n        MessageBody: 'test1',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/sam1`,\n        DelaySeconds: '0',\n        MessageAttributes: {\n            \"1\": {\n                \"DataType\": \"Number\",\n                \"StringValue\": \"123\"\n            }\n        }\n    }, function (data) {\n        console.log(\"Success\");\n        console.log(data);\n\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\n        console.log(\"not success\");\n        console.log(error);\n\n\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n    callback(null, { \"message\": \"Successfully executed new put\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -125,8 +125,7 @@
           "messageRetentionPeriodUnit": "days",
           "maximumMessageSize": 256,
           "receiveMessageWaitTime": 0,
-          "deadLetterQueueName": "",
-          "contentBasedDeduplication": false
+          "deadLetterQueueName": ""
         }
       }
     },
@@ -170,7 +169,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562646309148
+    "lastSave": 1562646879190
   },
   "VCS_STATE": {
     "provider": "GitHub",
