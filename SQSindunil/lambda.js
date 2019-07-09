@@ -5,12 +5,12 @@ const sqs = new SL_AWS.SQS(AWS);
 
 exports.handler = function (event, context, callback) {
     sqs.receiveAndDeleteMessages({
-        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/check.fifo`,
+        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/samq`,
         AttributeNames: ['All'],
         MaxNumberOfMessages: '10',
         VisibilityTimeout: '30',
         WaitTimeSeconds: '10',
-        MessageAttributeNames: ['1', '2', '3', '4']
+        MessageAttributeNames: ['a', 'b', 'c', 'd']
     }, function (receivedMessages) {
         // implement received message filtering logic here and return filtered set of messages which 
         // are allowed to delete in the next step
@@ -30,5 +30,5 @@ exports.handler = function (event, context, callback) {
 
 
 
-    callback(null, { "message": "Successfully executed new put" });
+    callback(null, { "message": "Successfully executed get and remove" });
 }
