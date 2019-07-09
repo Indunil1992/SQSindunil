@@ -8,7 +8,12 @@ exports.handler = function (event, context, callback) {
         MessageBody: 'io',
         QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,
         DelaySeconds: '0',
-        MessageAttributes: {}
+        MessageAttributes: {
+            "aa": {
+                "DataType": "Number",
+                "StringValue": "12"
+            }
+        }
     }, function (data) {
         console.log("Success");
         console.log(data);
