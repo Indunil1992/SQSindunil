@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.sendMessage({\n        MessageBody: 'io',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,\n        DelaySeconds: '0',\n        MessageAttributes: {\n            \"aa\": {\n                \"DataType\": \"Number\",\n                \"StringValue\": \"12\"\n            }\n        }\n    }, function (data) {\n        console.log(\"Success\");\n        console.log(data);\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\n        console.log(\"not success\");\n        console.log(data);\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n\n    callback(null, { \"message\": \"Successfully executed new put\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\n\nexports.handler = function (event, context, callback) {\n    sqs.receiveAndDeleteMessages({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,\n        AttributeNames: ['All'],\n        MaxNumberOfMessages: '10',\n        VisibilityTimeout: '30',\n        WaitTimeSeconds: '10'\n    }, function (receivedMessages) {\n        // implement received message filtering logic here and return filtered set of messages which \n        // are allowed to delete in the next step\n         console.log(\"receivedMessages\");\n                 console.log( receivedMessages );\n        return receivedMessages;\n    }, function (deleteSuccessData) {\n         console.log(\"deleteSuccessData\");\n                 console.log( deleteSuccessData );\n        // implement delete success state here\n    }, function (error) {\n         console.log(\"No messages\");\n                 console.log( error );\n        // implement error handling logic here\n    });\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed new put\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -53,31 +53,6 @@
     ],
     "currentFileId": "0eff4403-1014-4690-a140-cbee8bee62d4",
     "resources": {
-      "apigusEast1slackapiteststgingindget": {
-        "name": "apigusEast1slackapiteststgingindget",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 1,
-          "apiName": "slack_api",
-          "apiId": "gzxv3u0uhe",
-          "endpointType": "EDGE",
-          "rootResourceId": "cxna1m1fmi",
-          "existingResources": {
-            "/": "cxna1m1fmi",
-            "/chats": "qlk5ig"
-          },
-          "resourceMode": 0,
-          "resourceName": "test/stging/ind",
-          "resourcePath": "/test/stging/ind",
-          "restMethod": "GET",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "Test",
-          "mode": 1
-        }
-      },
       "apigusEast1myapindunilteststgingindput": {
         "name": "apigusEast1myapindunilteststgingindput",
         "type": "API_GATEWAY",
@@ -100,32 +75,6 @@
           "stageMode": 0,
           "stageName": "Test",
           "mode": 1
-        }
-      },
-      "sqssam1": {
-        "name": "sqssam1",
-        "type": "SQS",
-        "config": {
-          "mode": 0,
-          "existing": false,
-          "name": "sam1",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/sam1",
-          "selectedRegion": "us-east-1",
-          "deliveryDelay": 0,
-          "deliveryDelayUnit": "seconds",
-          "useRedrivePolicy": false,
-          "useSSE": false,
-          "kmsCustomerMasterKey": "default",
-          "accountId": "318300609668",
-          "dataKeyReusePeriod": 5,
-          "queueType": "standardQueue",
-          "defaultVisibilityTimeout": 30,
-          "defaultVisibilityTimeoutUnit": "seconds",
-          "messageRetentionPeriod": 4,
-          "messageRetentionPeriodUnit": "days",
-          "maximumMessageSize": 256,
-          "receiveMessageWaitTime": 0,
-          "deadLetterQueueName": ""
         }
       },
       "sqsHiru1T": {
@@ -190,7 +139,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562648800811
+    "lastSave": 1562649499379
   },
   "VCS_STATE": {
     "provider": "GitHub",
