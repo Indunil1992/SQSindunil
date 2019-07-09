@@ -5,9 +5,9 @@ const sqs = new SL_AWS.SQS(AWS);
 exports.handler = function (event, context, callback) {
 
     sqs.receiveMessage({
-        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/samq`,
+        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/sample1`,
         AttributeNames: ['All'],
-        MaxNumberOfMessages: '1',
+        MaxNumberOfMessages: '100',
         VisibilityTimeout: '30',
         WaitTimeSeconds: '0'
     }).promise()
