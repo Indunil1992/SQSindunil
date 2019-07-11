@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.sendMessage({\n        MessageBody: '321',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/indu.fifo`,\n        DelaySeconds: '0',\n        MessageDeduplicationId: '123',\n        MessageGroupId: '12345',\n        MessageAttributes: {}\n    }, function (data) {\nconsole.log(\"Success\");\n                 console.log( data );\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\nconsole.log(\"not Success\");\n                 console.log( error );\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n\n    callback(null, { \"message\": \"Successfully executed new\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n    sqs.sendMessage({\n        MessageBody: 'indu123',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,\n        DelaySeconds: '0',\n        MessageAttributes: {\n            \"1\": {\n                \"DataType\": \"String\",\n                \"StringValue\": \"abc\"\n            },\n            \"2\": {\n                \"DataType\": \"Number\",\n                \"StringValue\": \"123\"\n            },\n            \"3\": {\n                \"DataType\": \"Binary\",\n                \"BinaryValue\": \"0\"\n            }\n        }\n    }, function (data) {\n        console.log(\"Success data\");\n                 console.log( data );\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\n        console.log(\"not Success\");\n                 console.log( error );\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n\n    callback(null, { \"message\": \"Successfully executed new\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -87,31 +87,25 @@
           "mode": 1
         }
       },
-      "sqsindufifo": {
-        "name": "sqsindufifo",
+      "sqsHiru1T": {
+        "name": "sqsHiru1T",
         "type": "SQS",
         "config": {
-          "mode": 0,
-          "existing": false,
-          "name": "indu.fifo",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/indu.fifo",
+          "mode": 1,
+          "existing": true,
+          "name": "Hiru1T",
+          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/Hiru1T",
           "selectedRegion": "us-east-1",
-          "deliveryDelay": 0,
+          "deliveryDelay": "0",
           "deliveryDelayUnit": "seconds",
-          "useRedrivePolicy": false,
-          "useSSE": false,
-          "kmsCustomerMasterKey": "default",
-          "accountId": "318300609668",
-          "dataKeyReusePeriod": 5,
-          "queueType": "fifoQueue",
-          "defaultVisibilityTimeout": 30,
+          "queueType": "standardQueue",
+          "defaultVisibilityTimeout": "120",
           "defaultVisibilityTimeoutUnit": "seconds",
-          "messageRetentionPeriod": 4,
-          "messageRetentionPeriodUnit": "days",
+          "messageRetentionPeriod": "345600",
+          "messageRetentionPeriodUnit": "seconds",
           "maximumMessageSize": 256,
-          "receiveMessageWaitTime": 0,
-          "deadLetterQueueName": "",
-          "contentBasedDeduplication": false
+          "receiveMessageWaitTime": "0",
+          "queueARN": "arn:aws:sqs:us-east-1:318300609668:Hiru1T"
         }
       }
     },
@@ -155,7 +149,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562822295939
+    "lastSave": 1562824726479
   },
   "VCS_STATE": {
     "provider": "GitHub",
