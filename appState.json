@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\n\n\nexports.handler = function (event, context, callback) {\n\nsqs.receiveAndDeleteMessages({\n    QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/sam`,\n    AttributeNames: ['All'],\n    MaxNumberOfMessages: '10',\n    VisibilityTimeout: '30',\n    WaitTimeSeconds: '0'\n}, function (receivedMessages) {\n    console.log(\"received Messages\");\n                 console.log( receivedMessages );\n    // implement received message filtering logic here and return filtered set of messages which \n    // are allowed to delete in the next step\n    return receivedMessages;\n}, function (deleteSuccessData) {\n    console.log(\"delete SuccessData\");\n                 console.log( deleteSuccessData );\n    // implement delete success state here\n}, function (error) {\n    console.log(\"not Success\");\n                 console.log( error );\n    // implement error handling logic here\n});\n    callback(null, { \"message\": \"Successfully executed test6\" });\n}",
+        "code": "\nexports.handler = function (event, context, callback) {\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed test6\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -32,8 +32,10 @@
         },
         "triggers": [
           {
-            "resourceName": "apigusEast1TestAPIteststgingindput",
-            "config": {}
+            "resourceName": "sqsindun",
+            "config": {
+              "BatchSize": "10"
+            }
           }
         ],
         "testCases": {
@@ -87,28 +89,28 @@
           "mode": 1
         }
       },
-      "sqssam": {
-        "name": "sqssam",
+      "sqsindun": {
+        "name": "sqsindun",
         "type": "SQS",
         "config": {
           "mode": 0,
           "existing": false,
-          "name": "sam",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/sam",
+          "name": "indun",
+          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/indun",
           "selectedRegion": "us-east-1",
           "deliveryDelay": "3",
-          "deliveryDelayUnit": "seconds",
+          "deliveryDelayUnit": "minutes",
           "useRedrivePolicy": true,
           "useSSE": true,
           "kmsCustomerMasterKey": "default",
           "accountId": "318300609668",
           "dataKeyReusePeriod": 5,
           "queueType": "standardQueue",
-          "defaultVisibilityTimeout": 30,
+          "defaultVisibilityTimeout": "40",
           "defaultVisibilityTimeoutUnit": "seconds",
           "messageRetentionPeriod": "3",
           "messageRetentionPeriodUnit": "days",
-          "maximumMessageSize": "300",
+          "maximumMessageSize": 256,
           "receiveMessageWaitTime": "3",
           "deadLetterQueueName": "4",
           "maximumReceives": "9",
@@ -156,7 +158,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562827479878
+    "lastSave": 1562829448397
   },
   "VCS_STATE": {
     "provider": "GitHub",
