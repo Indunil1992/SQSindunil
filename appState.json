@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/sample1`,\n        AttributeNames: ['All'],\n        MaxNumberOfMessages: '100',\n        VisibilityTimeout: '30',\n        WaitTimeSeconds: '0'\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                });\n            } else {\n                // No messages to process\n            }\n        })\n        .catch(err => {\n            // error handling goes here\n        });\n\n\n    callback(null, { \"message\": \"Successfully executed get and remove\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/induniltst1.fifo`,\n        AttributeNames: ['All'],\n        MaxNumberOfMessages: '10',\n        VisibilityTimeout: '30',\n        WaitTimeSeconds: '0',\n        MessageAttributeNames: ['a', 's', 'd']\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    console.log(\"receivedMsgData\");\n                    console.log(receivedMsgData);\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                });\n            } else {\n                console.log(\"Success\");\n                //console.log( data );\n                // No messages to process\n            }\n        })\n        .catch(err => {\n            console.log(\"not Success\");\n            console.log(err);\n            // error handling goes here\n        });\n\n\n\n    callback(null, { \"message\": \"Successfully executed fifo\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -32,7 +32,7 @@
         },
         "triggers": [
           {
-            "resourceName": "apigusEast1myapindunilteststgingindput",
+            "resourceName": "apigusEast1TestAPIteststgingindput",
             "config": {}
           }
         ],
@@ -77,40 +77,68 @@
           "mode": 1
         }
       },
-      "sqssamq": {
-        "name": "sqssamq",
-        "type": "SQS",
+      "apigusEast1TestAPIteststgingindput": {
+        "name": "apigusEast1TestAPIteststgingindput",
+        "type": "API_GATEWAY",
         "config": {
-          "mode": 0,
-          "existing": false,
-          "name": "samq",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/samq",
           "selectedRegion": "us-east-1",
-          "deliveryDelay": 0,
-          "deliveryDelayUnit": "seconds",
-          "useRedrivePolicy": false,
-          "useSSE": false,
-          "kmsCustomerMasterKey": "default",
-          "accountId": "318300609668",
-          "dataKeyReusePeriod": 5,
-          "queueType": "standardQueue",
-          "defaultVisibilityTimeout": 30,
-          "defaultVisibilityTimeoutUnit": "seconds",
-          "messageRetentionPeriod": 4,
-          "messageRetentionPeriodUnit": "days",
-          "maximumMessageSize": 256,
-          "receiveMessageWaitTime": 0,
-          "deadLetterQueueName": ""
+          "apiMode": 1,
+          "apiName": "TestAPI",
+          "apiId": "0itznun7w3",
+          "endpointType": "EDGE",
+          "rootResourceId": "h2lelj6j7k",
+          "existingResources": {
+            "/hiru/test": "2b8zt0",
+            "/testPathWithSlash": "2rkw74",
+            "/hiru": "3nc52b",
+            "/hiru/sample": "4226gg",
+            "/hiru/sqstest": "88gr2y",
+            "/MyLambda": "98nqbj",
+            "/": "h2lelj6j7k",
+            "/testWithSlash": "q4m4g1",
+            "/testtwospeciallambda": "q4szm3",
+            "/testtwospecialkumutest": "wey3lk",
+            "/hiru/snscheck": "wok1ku"
+          },
+          "resourceMode": 0,
+          "resourceName": "test/stging/ind",
+          "resourcePath": "/test/stging/ind",
+          "restMethod": "PUT",
+          "proxyIntegration": false,
+          "enableCORS": false,
+          "stageMode": 0,
+          "stageName": "Test",
+          "mode": 1
         }
       },
-      "sqssample1": {
-        "name": "sqssample1",
+      "sqsinduniltstfifo": {
+        "name": "sqsinduniltstfifo",
         "type": "SQS",
         "config": {
           "mode": 0,
           "existing": false,
-          "name": "sample1",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/sample1",
+          "name": "induniltst.fifo",
+          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/induniltst.fifo",
+          "selectedRegion": "us-east-1",
+          "deliveryDelay": "0",
+          "deliveryDelayUnit": "seconds",
+          "queueType": "fifoQueue",
+          "defaultVisibilityTimeout": "120",
+          "defaultVisibilityTimeoutUnit": "seconds",
+          "messageRetentionPeriod": "345600",
+          "messageRetentionPeriodUnit": "seconds",
+          "maximumMessageSize": 256,
+          "receiveMessageWaitTime": "0"
+        }
+      },
+      "sqsinduniltst1fifo": {
+        "name": "sqsinduniltst1fifo",
+        "type": "SQS",
+        "config": {
+          "mode": 0,
+          "existing": false,
+          "name": "induniltst1.fifo",
+          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/induniltst1.fifo",
           "selectedRegion": "us-east-1",
           "deliveryDelay": 0,
           "deliveryDelayUnit": "seconds",
@@ -119,7 +147,7 @@
           "kmsCustomerMasterKey": "default",
           "accountId": "318300609668",
           "dataKeyReusePeriod": 5,
-          "queueType": "standardQueue",
+          "queueType": "fifoQueue",
           "defaultVisibilityTimeout": 30,
           "defaultVisibilityTimeoutUnit": "seconds",
           "messageRetentionPeriod": 4,
@@ -170,7 +198,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562656344836
+    "lastSave": 1562820540137
   },
   "VCS_STATE": {
     "provider": "GitHub",
