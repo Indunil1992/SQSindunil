@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n    sqs.sendMessage({\n        MessageBody: 'indu123',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/Hiru1T`,\n        DelaySeconds: '0',\n        MessageAttributes: {\n            \"1\": {\n                \"DataType\": \"String\",\n                \"StringValue\": \"abc\"\n            },\n            \"2\": {\n                \"DataType\": \"Number\",\n                \"StringValue\": \"123\"\n            },\n            \"3\": {\n                \"DataType\": \"Binary\",\n                \"BinaryValue\": \"0\"\n            }\n        }\n    }, function (data) {\n        console.log(\"Success data\");\n                 console.log( data );\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\n        console.log(\"not Success\");\n                 console.log( error );\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n\n    callback(null, { \"message\": \"Successfully executed new\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nsqs.receiveAndDeleteMessages({\n    QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/sam`,\n    AttributeNames: ['All'],\n    MaxNumberOfMessages: '10',\n    VisibilityTimeout: '30',\n    WaitTimeSeconds: '0'\n}, function (receivedMessages) {\n    console.log(\"received Messages\");\n                 console.log( receivedMessages );\n    // implement received message filtering logic here and return filtered set of messages which \n    // are allowed to delete in the next step\n    return receivedMessages;\n}, function (deleteSuccessData) {\n    console.log(\"delete SuccessData\");\n                 console.log( deleteSuccessData );\n    // implement delete success state here\n}, function (error) {\n    console.log(\"not Success\");\n                 console.log( error );\n    // implement error handling logic here\n});\n\nexports.handler = function (event, context, callback) {\n\n\n    callback(null, { \"message\": \"Successfully executed test6\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -87,25 +87,32 @@
           "mode": 1
         }
       },
-      "sqsHiru1T": {
-        "name": "sqsHiru1T",
+      "sqssam": {
+        "name": "sqssam",
         "type": "SQS",
         "config": {
-          "mode": 1,
-          "existing": true,
-          "name": "Hiru1T",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/Hiru1T",
+          "mode": 0,
+          "existing": false,
+          "name": "sam",
+          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/sam",
           "selectedRegion": "us-east-1",
-          "deliveryDelay": "0",
+          "deliveryDelay": "3",
           "deliveryDelayUnit": "seconds",
+          "useRedrivePolicy": true,
+          "useSSE": true,
+          "kmsCustomerMasterKey": "default",
+          "accountId": "318300609668",
+          "dataKeyReusePeriod": 5,
           "queueType": "standardQueue",
-          "defaultVisibilityTimeout": "120",
+          "defaultVisibilityTimeout": 30,
           "defaultVisibilityTimeoutUnit": "seconds",
-          "messageRetentionPeriod": "345600",
-          "messageRetentionPeriodUnit": "seconds",
-          "maximumMessageSize": 256,
-          "receiveMessageWaitTime": "0",
-          "queueARN": "arn:aws:sqs:us-east-1:318300609668:Hiru1T"
+          "messageRetentionPeriod": "3",
+          "messageRetentionPeriodUnit": "days",
+          "maximumMessageSize": "300",
+          "receiveMessageWaitTime": "3",
+          "deadLetterQueueName": "4",
+          "maximumReceives": "9",
+          "contentBasedDeduplication": false
         }
       }
     },
@@ -149,7 +156,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562824726479
+    "lastSave": 1562827414508
   },
   "VCS_STATE": {
     "provider": "GitHub",
