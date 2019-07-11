@@ -22,11 +22,11 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "\nexports.handler = function (event, context, callback) {\n\n\n\n\n    callback(null, { \"message\": \"Successfully executed test6\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/test.fifo`,\n        AttributeNames: ['All'],\n        MaxNumberOfMessages: '4',\n        VisibilityTimeout: '30',\n        WaitTimeSeconds: '10'\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                });\n            } else {\n                // No messages to process\n            }\n        })\n        .catch(err => {\n            // error handling goes here\n        });\n\n\n\n    callback(null, { \"message\": \"Successfully executed test6\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
-          "timeout": 60,
+          "timeout": 40,
           "memory": 128,
           "layers": []
         },
@@ -55,40 +55,6 @@
     ],
     "currentFileId": "0eff4403-1014-4690-a140-cbee8bee62d4",
     "resources": {
-      "apigusEast1TestAPIteststgingindput": {
-        "name": "apigusEast1TestAPIteststgingindput",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 1,
-          "apiName": "TestAPI",
-          "apiId": "0itznun7w3",
-          "endpointType": "EDGE",
-          "rootResourceId": "h2lelj6j7k",
-          "existingResources": {
-            "/hiru/test": "2b8zt0",
-            "/testPathWithSlash": "2rkw74",
-            "/hiru": "3nc52b",
-            "/hiru/sample": "4226gg",
-            "/hiru/sqstest": "88gr2y",
-            "/MyLambda": "98nqbj",
-            "/": "h2lelj6j7k",
-            "/testWithSlash": "q4m4g1",
-            "/testtwospeciallambda": "q4szm3",
-            "/testtwospecialkumutest": "wey3lk",
-            "/hiru/snscheck": "wok1ku"
-          },
-          "resourceMode": 0,
-          "resourceName": "test/stging/ind",
-          "resourcePath": "/test/stging/ind",
-          "restMethod": "PUT",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "Test",
-          "mode": 1
-        }
-      },
       "sqsindun": {
         "name": "sqsindun",
         "type": "SQS",
@@ -115,6 +81,34 @@
           "deadLetterQueueName": "4",
           "maximumReceives": "9",
           "contentBasedDeduplication": false
+        }
+      },
+      "sqstestfifo": {
+        "name": "sqstestfifo",
+        "type": "SQS",
+        "config": {
+          "mode": 0,
+          "existing": false,
+          "name": "test.fifo",
+          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/test.fifo",
+          "selectedRegion": "us-east-1",
+          "deliveryDelay": "3",
+          "deliveryDelayUnit": "minutes",
+          "useRedrivePolicy": true,
+          "useSSE": true,
+          "kmsCustomerMasterKey": "default",
+          "accountId": "318300609668",
+          "dataKeyReusePeriod": 5,
+          "queueType": "fifoQueue",
+          "defaultVisibilityTimeout": 30,
+          "defaultVisibilityTimeoutUnit": "seconds",
+          "messageRetentionPeriod": "5",
+          "messageRetentionPeriodUnit": "days",
+          "maximumMessageSize": "300",
+          "receiveMessageWaitTime": "3",
+          "deadLetterQueueName": "4",
+          "maximumReceives": "9",
+          "contentBasedDeduplication": true
         }
       }
     },
@@ -158,7 +152,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562829448397
+    "lastSave": 1562833177598
   },
   "VCS_STATE": {
     "provider": "GitHub",
