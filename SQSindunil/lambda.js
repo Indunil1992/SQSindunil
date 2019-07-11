@@ -9,7 +9,8 @@ exports.handler = function (event, context, callback) {
         AttributeNames: ['All'],
         MaxNumberOfMessages: '4',
         VisibilityTimeout: '30',
-        WaitTimeSeconds: '10'
+        WaitTimeSeconds: '10',
+        MessageAttributeNames: ['sa', 'saa']
     }).promise()
         .then(receivedMsgData => {
             if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {
