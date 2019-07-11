@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.receiveMessage({\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/induniltst1.fifo`,\n        AttributeNames: ['All'],\n        MaxNumberOfMessages: '10',\n        VisibilityTimeout: '30',\n        WaitTimeSeconds: '0',\n        MessageAttributeNames: ['a', 's', 'd']\n    }).promise()\n        .then(receivedMsgData => {\n            if (!!(receivedMsgData) && !!(receivedMsgData.Messages)) {\n                let receivedMessages = receivedMsgData.Messages;\n                receivedMessages.forEach(message => {\n                    console.log(\"receivedMsgData\");\n                    console.log(receivedMsgData);\n                    // your logic to access each message through out the loop. Each message is available under variable message \n                    // within this block\n                });\n            } else {\n                console.log(\"Success\");\n                //console.log( data );\n                // No messages to process\n            }\n        })\n        .catch(err => {\n            console.log(\"not Success\");\n            console.log(err);\n            // error handling goes here\n        });\n\n\n\n    callback(null, { \"message\": \"Successfully executed fifo\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nexports.handler = function (event, context, callback) {\n\n    sqs.sendMessage({\n        MessageBody: '321',\n        QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/indu.fifo`,\n        DelaySeconds: '0',\n        MessageDeduplicationId: '123',\n        MessageGroupId: '12345',\n        MessageAttributes: {}\n    }, function (data) {\nconsole.log(\"Success\");\n                 console.log( data );\n        // your logic (logging etc) to handle successful message delivery, should be here\n    }, function (error) {\nconsole.log(\"not Success\");\n                 console.log( error );\n        // your logic (logging etc) to handle failures, should be here\n    });\n\n\n\n    callback(null, { \"message\": \"Successfully executed new\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -53,30 +53,6 @@
     ],
     "currentFileId": "0eff4403-1014-4690-a140-cbee8bee62d4",
     "resources": {
-      "apigusEast1myapindunilteststgingindput": {
-        "name": "apigusEast1myapindunilteststgingindput",
-        "type": "API_GATEWAY",
-        "config": {
-          "selectedRegion": "us-east-1",
-          "apiMode": 1,
-          "apiName": "myapindunil",
-          "apiId": "8hifidrt5c",
-          "endpointType": "REGIONAL",
-          "rootResourceId": "5a0303edae",
-          "existingResources": {
-            "/": "5a0303edae"
-          },
-          "resourceMode": 0,
-          "resourceName": "test/stging/ind",
-          "resourcePath": "/test/stging/ind",
-          "restMethod": "PUT",
-          "proxyIntegration": false,
-          "enableCORS": false,
-          "stageMode": 0,
-          "stageName": "Test",
-          "mode": 1
-        }
-      },
       "apigusEast1TestAPIteststgingindput": {
         "name": "apigusEast1TestAPIteststgingindput",
         "type": "API_GATEWAY",
@@ -111,34 +87,14 @@
           "mode": 1
         }
       },
-      "sqsinduniltstfifo": {
-        "name": "sqsinduniltstfifo",
+      "sqsindufifo": {
+        "name": "sqsindufifo",
         "type": "SQS",
         "config": {
           "mode": 0,
           "existing": false,
-          "name": "induniltst.fifo",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/induniltst.fifo",
-          "selectedRegion": "us-east-1",
-          "deliveryDelay": "0",
-          "deliveryDelayUnit": "seconds",
-          "queueType": "fifoQueue",
-          "defaultVisibilityTimeout": "120",
-          "defaultVisibilityTimeoutUnit": "seconds",
-          "messageRetentionPeriod": "345600",
-          "messageRetentionPeriodUnit": "seconds",
-          "maximumMessageSize": 256,
-          "receiveMessageWaitTime": "0"
-        }
-      },
-      "sqsinduniltst1fifo": {
-        "name": "sqsinduniltst1fifo",
-        "type": "SQS",
-        "config": {
-          "mode": 0,
-          "existing": false,
-          "name": "induniltst1.fifo",
-          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/induniltst1.fifo",
+          "name": "indu.fifo",
+          "url": "https://sqs.us-east-1.amazonaws.com/318300609668/indu.fifo",
           "selectedRegion": "us-east-1",
           "deliveryDelay": 0,
           "deliveryDelayUnit": "seconds",
@@ -154,7 +110,8 @@
           "messageRetentionPeriodUnit": "days",
           "maximumMessageSize": 256,
           "receiveMessageWaitTime": 0,
-          "deadLetterQueueName": ""
+          "deadLetterQueueName": "",
+          "contentBasedDeduplication": false
         }
       }
     },
@@ -198,7 +155,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562820540137
+    "lastSave": 1562822295939
   },
   "VCS_STATE": {
     "provider": "GitHub",
