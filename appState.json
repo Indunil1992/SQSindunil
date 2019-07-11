@@ -22,7 +22,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "SQSindunil/lambda.js",
-        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\nsqs.receiveAndDeleteMessages({\n    QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/sam`,\n    AttributeNames: ['All'],\n    MaxNumberOfMessages: '10',\n    VisibilityTimeout: '30',\n    WaitTimeSeconds: '0'\n}, function (receivedMessages) {\n    console.log(\"received Messages\");\n                 console.log( receivedMessages );\n    // implement received message filtering logic here and return filtered set of messages which \n    // are allowed to delete in the next step\n    return receivedMessages;\n}, function (deleteSuccessData) {\n    console.log(\"delete SuccessData\");\n                 console.log( deleteSuccessData );\n    // implement delete success state here\n}, function (error) {\n    console.log(\"not Success\");\n                 console.log( error );\n    // implement error handling logic here\n});\n\nexports.handler = function (event, context, callback) {\n\n\n    callback(null, { \"message\": \"Successfully executed test6\" });\n}",
+        "code": "let AWS = require('aws-sdk');\nlet SL_AWS = require('slappforge-sdk-aws');\nconst sqs = new SL_AWS.SQS(AWS);\n\n\n\nexports.handler = function (event, context, callback) {\n\nsqs.receiveAndDeleteMessages({\n    QueueUrl: `https://sqs.${process.env.AWS_REGION}.amazonaws.com/${process.env.SIGMA_AWS_ACC_ID}/sam`,\n    AttributeNames: ['All'],\n    MaxNumberOfMessages: '10',\n    VisibilityTimeout: '30',\n    WaitTimeSeconds: '0'\n}, function (receivedMessages) {\n    console.log(\"received Messages\");\n                 console.log( receivedMessages );\n    // implement received message filtering logic here and return filtered set of messages which \n    // are allowed to delete in the next step\n    return receivedMessages;\n}, function (deleteSuccessData) {\n    console.log(\"delete SuccessData\");\n                 console.log( deleteSuccessData );\n    // implement delete success state here\n}, function (error) {\n    console.log(\"not Success\");\n                 console.log( error );\n    // implement error handling logic here\n});\n    callback(null, { \"message\": \"Successfully executed test6\" });\n}",
         "config": {
           "runtime": "nodejs8.10",
           "handler": "handler",
@@ -156,7 +156,7 @@
     "projectRegion": "us-east-1",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1562827414508
+    "lastSave": 1562827479878
   },
   "VCS_STATE": {
     "provider": "GitHub",
